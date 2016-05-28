@@ -25,7 +25,7 @@ SOFTWARE.
 """
 
 
-Parts borrowed from Node.js(require function code in neorepl.js and files located at internal dir) is licensed for use as follows:
+Parts borrowed from Node.js(require and compile functions code in neorepl.js and files located at internal dir) is licensed for use as follows:
 
 """
 Copyright Node.js contributors. All rights reserved.
