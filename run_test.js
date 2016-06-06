@@ -1,37 +1,42 @@
-var spawn = require('child_process').spawn;
-var path = require("path");
+'use strict';
 
-var neoreplProc = spawn("node",
-                        ["./../../neorepl.js", "./main"],
-                        { stdio: 'inherit', cwd: path.resolve(process.cwd(),
-                        "./test/app")});
-                        
-neoreplProc.on('exit', function (code, signal) {
-  if (signal) {
-    process.kill(process.pid, signal);
-  } else {
-    process.exit(code);
-  }
-});
+const spawn = require('child_process').spawn;
+const path = require("path");
 
-var mochaProc = spawn("mocha", [], { stdio: 'inherit' });
-mochaProc.on('exit', function (code, signal) {
-  if (signal) {
-    process.kill(process.pid, signal);
-  } else {
-    process.exit(code);
-  }
-});
+let neoreplProc;
+let mochaProc;
 
-function killProcs() {
+const killProcs = () => {
   neoreplProc.kill('SIGINT');
   neoreplProc.kill('SIGTERM');
-
   mochaProc.kill('SIGINT');
   mochaProc.kill('SIGTERM');
 }
 
-process.on('exit', function(signal, code){
+neoreplProc = spawn("node",
+                        ["./../../neorepl.js", "./main"],
+                        { stdio: 'inherit', cwd: path.resolve(process.cwd(),
+                        "./test/app")});
+neoreplProc.on('exit', (code, signal) => {
+  if (signal) {
+    process.kill(process.pid, signal);
+  } else {
+    process.exit(code);
+  }
+});
+
+setTimeout(() => {
+  mochaProc = spawn("mocha", [], { stdio: 'inherit' });
+  mochaProc.on('exit', (code, signal) => {
+    if (signal) {
+      process.kill(process.pid, signal);
+    } else {
+      process.exit(code);
+    }
+  });
+}, 3000);
+
+process.on('exit', (signal, code) => {
   killProcs();
   if (signal) {
     process.kill(process.pid, signal);
@@ -40,6 +45,6 @@ process.on('exit', function(signal, code){
   }
 });
 
-process.on('SIGINT', function () {
+process.on('SIGINT', () => {
   killProcs();
 });
