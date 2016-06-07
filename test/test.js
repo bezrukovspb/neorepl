@@ -4,13 +4,13 @@ const path = require("path");
 const assert = require("chai").assert;
 const request = require("request");
 
-function replEval(code, modulePath, callback){
+const replEval = (code, modulePath, callback) => {
   const message = {code: code, path: modulePath};
 
-  const requestCallback = function (err, resp, body){
+  const requestCallback = (err, resp, body) => {
     if (err) throw err;
     const message = body;
-    var replErr = null;
+    let replErr = null;
     if (message.status !== "ok") {
       replErr = message.result;
     }
@@ -25,16 +25,16 @@ function replEval(code, modulePath, callback){
   }, requestCallback);
 }
 
-describe("Modules test", function() {
-  it("x should be defined only in root_x.js", function(done){
-    replEval("x;", path.resolve(__dirname, "./app/root_x.js"), function(err, result) {
+describe("Modules test", () => {
+  it("x should be defined only in root_x.js", (done) => {
+    replEval("x;", path.resolve(__dirname, "./app/root_x.js"), (err, result) => {
       assert.equal(result, 111);
       done();
     });
   });
 
-  it("y should be defined only in root_y.js", function(done){
-    replEval("y;", path.resolve(__dirname, "./app/root_y.js"), function(err, result) {
+  it("y should be defined only in root_y.js", (done) => {
+    replEval("y;", path.resolve(__dirname, "./app/root_y.js"), (err, result) => {
       assert.equal(result, 222);
       done();
     });
