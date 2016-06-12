@@ -41,6 +41,7 @@
   "files": [
     "internal",
     "test",
+    "utils.js",
     "neorepl.js",
     "LICENSE"
   ]

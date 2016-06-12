@@ -1,6 +1,41 @@
 #!/usr/bin/env node
 "use strict";
 
+const utils = require("./utils");
+
+let replPosition;
+let replPath;
+
+process.argv.forEach((it) => {
+    let splited = it.split("=");
+    if (splited.length === 1) return;
+    if (splited[0] == "--repl-position") replPosition = splited[1];
+    if (splited[0] == "--repl-path") replPath = splited[1];
+});
+
+if (replPosition && replPath) {
+  let code = "";
+
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('readable', () => {
+    let chunk = process.stdin.read();
+    if (chunk !== null) {
+      code += chunk;
+    }
+  });
+
+  process.stdin.on('end', () => {
+    const expression = utils.getExpression(replPosition, code);
+    const answer = utils.replEval(expression, replPath, (err, answer) => {
+      process.stdout.write(JSON.stringify(answer));
+    });
+  });
+
+  return;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
@@ -77,9 +112,10 @@ const evalCode = function (code, moduleId) {
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 var app = express();
 app.use(bodyParser.json());
-
 app.post('/', function (req, res) {
   const message = req.body;
   const result = evalCode(message.code, message.path);
