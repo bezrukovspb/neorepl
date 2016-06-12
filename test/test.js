@@ -40,3 +40,22 @@ describe("Modules test", () => {
     });
   });
 });
+
+describe("Expression extractor and executor test", () => {
+  const utils = require("../utils.js");
+  it("Should extract a right expression", () => {
+    const code = `
+    "use strict";
+    const x = 100;
+    let y = 20;
+    (((x) + y));
+    if (x) {
+      y = 50;
+    };
+    const z = x + y;
+    `;
+
+    assert.equal(utils.getExpression(62, code), '\n"use strict";\n\nx + y;');
+    assert.equal(utils.getExpression(46, code), '\n"use strict";\n\nlet y = 20;');
+  });
+});
