@@ -1,6 +1,6 @@
 {
   "name": "neorepl",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Advanced REPL for Node.js",
   "main": "neorepl.js",
   "scripts": {
