@@ -34,8 +34,8 @@ describe("Expression extractor and executor test", () => {
   `;
 
   it("Should extract a right expression", () => {
-    assert.equal(utils.getExpression(62, code), '\n"use strict";\n\nx + y;');
-    assert.equal(utils.getExpression(46, code), '\n"use strict";\n\nlet y = 20;');
+    assert.equal(utils.getExpression(62, code).code, '\n"use strict";\n\nx + y;');
+    assert.equal(utils.getExpression(46, code).code, '\n"use strict";\n\nlet y = 20;');
   });
 
 

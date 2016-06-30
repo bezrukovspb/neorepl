@@ -26,8 +26,9 @@ if (replPosition && replPath) {
 
   process.stdin.on('end', () => {
     const expression = utils.getExpression(replPosition, code);
-    const answer = utils.replEval(expression, replPath, (err, answer) => {
-      process.stdout.write(JSON.stringify(answer));
+    const answer = utils.replEval(expression.code, replPath, (err, answer) => {
+      const out = {result: answer.result, status: answer.status, start: expression.start, end: expression.end}
+      process.stdout.write(JSON.stringify(out));
     });
   });
 
@@ -108,7 +109,7 @@ if (process.argv.length === 3) {
 const evalCode = function (code, moduleId) {
   const cachedModule = Module._cache[moduleId];
   if (cachedModule && cachedModule.hasOwnProperty("__context__")){
-    return vm.runInContext(code, cachedModule.__context__);
+    return vm.runInContext('"use strict";' + code, cachedModule.__context__);
   }
 }
 
